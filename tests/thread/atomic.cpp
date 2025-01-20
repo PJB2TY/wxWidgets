@@ -50,7 +50,7 @@ namespace
             m_operateOn(operateOn), m_testType(testType) {}
 
         // thread execution starts here
-        virtual void *Entry() wxOVERRIDE;
+        virtual void *Entry() override;
 
     public:
         wxAtomicInt &m_operateOn;
@@ -89,8 +89,8 @@ TEST_CASE("Atomic::ReturnValue", "[atomic]")
 
 TEST_CASE("Atomic::WithThreads", "[atomic]")
 {
-    int count;
-    ETestType testType;
+    int count wxDUMMY_INITIALIZE(0);
+    ETestType testType wxDUMMY_INITIALIZE(DecOnly);
 
     SECTION( "2 threads using inc and dec") { count =  2; testType = IncAndDecMixed; }
     SECTION("10 threads using inc and dec") { count = 10; testType = IncAndDecMixed; }
@@ -135,7 +135,7 @@ TEST_CASE("Atomic::WithThreads", "[atomic]")
     for ( i = 0; i < count; ++i )
     {
         // each thread should return 0, else it detected some problem
-        CHECK (threads[i]->Wait() == (wxThread::ExitCode)0);
+        CHECK (threads[i]->Wait() == (wxThread::ExitCode)nullptr);
         delete threads[i];
     }
 
